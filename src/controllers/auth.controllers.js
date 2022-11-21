@@ -10,13 +10,17 @@ const loginHandler = async (req, res) => {
     }
     var user = await User.findOne({ where: { userName: userName } });
     if (user && compare(password, user.password)) {
-      const token = sign({ userName, roles, password }, env.KEY, {
-        expiresIn: "2h",
-      });
+      if (user.roles == roles) {
+        const token = sign({ userName, roles, password }, env.KEY, {
+          expiresIn: "2h",
+        });
 
-      user = user.toJSON();
-      user.token = token;
-      res.status(200).send(user);
+        user = user.toJSON();
+        user.token = token;
+        res.status(200).send(user);
+      } else {
+        res.status(400).send("invalid roles");
+      }
     } else {
       res.status(400).send("invalid credentials");
     }
