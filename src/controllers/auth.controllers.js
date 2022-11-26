@@ -31,13 +31,11 @@ const loginHandler = async (req, res) => {
 
 const registerHandler = async (req, res) => {
   try {
-    console.log(req.body);
     const { userName, password, roles } = req.body;
     if (!(userName && password && roles)) {
       res.status(400).send("all input field required");
     }
     const oldUser = await User.findOne({ where: { userName: userName } });
-    console.log(oldUser);
     if (oldUser) {
       return res
         .status(400)
